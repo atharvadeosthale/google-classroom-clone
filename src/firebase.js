@@ -20,5 +20,8 @@ const signInWithGoogle = () => {
     .then((response) => console.log(response.user))
     .catch((err) => console.log(`Error authenticating, ${err.message}`));
 };
+const logout = () => {
+  auth.signOut();
+};
 
-export { app, auth, db, signInWithGoogle };
+export { app, auth, db, signInWithGoogle, logout };
