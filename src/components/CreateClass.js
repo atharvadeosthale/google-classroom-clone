@@ -29,13 +29,6 @@ function CreateClass() {
         name: className,
         creatorName: user.displayName,
         creatorPhoto: user.photoURL,
-        members: [
-          {
-            uid: user.uid,
-            name: user.displayName,
-            photo: user.photoURL,
-          },
-        ],
         posts: [],
       });
 

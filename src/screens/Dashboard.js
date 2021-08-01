@@ -17,7 +17,7 @@ function Dashboard() {
         .collection("users")
         .where("uid", "==", user.uid)
         .onSnapshot((snapshot) => {
-          setClasses(snapshot.docs[0].data().enrolledClassrooms);
+          setClasses(snapshot?.docs[0]?.data()?.enrolledClassrooms);
         });
       // 👇🏻 below code doesn't update realtime, so updated to snapshot listener
       // const userData = querySnapshot.docs[0].data();

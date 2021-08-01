@@ -69,7 +69,9 @@ function Class() {
 
   return (
     <div className="class">
-      <div className="class__nameBox">{classData?.name}</div>
+      <div className="class__nameBox">
+        <div className="class__name">{classData?.name}</div>
+      </div>
       <div className="class__announce">
         <img src={user?.photoURL} alt="My image" />
         <input

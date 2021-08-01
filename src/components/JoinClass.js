@@ -8,11 +8,14 @@ import {
   TextField,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
+import { auth, db } from "../firebase";
 import { joinDialogAtom } from "../utils/atoms";
 
 function JoinClass() {
   const [open, setOpen] = useRecoilState(joinDialogAtom);
+  const [user, loading, error] = useAuthState(auth);
   const [classId, setClassId] = useState("");
 
   const handleClose = () => {
@@ -22,9 +25,29 @@ function JoinClass() {
   const joinClass = async () => {
     try {
       // check if class exists
-      // add user to class
+      const classRef = await db.collection("classes").doc(classId).get();
+      if (!classRef.exists) {
+        return alert(`Class doesn't exist, please provide correct ID`);
+      }
+      const classData = await classRef.data();
       // add class to user
+      const userRef = await db.collection("users").where("uid", "==", user.uid);
+      const userData = await (await userRef.get()).docs[0].data();
+      let tempClassrooms = userData.enrolledClassrooms;
+      tempClassrooms.push({
+        creatorName: classData.creatorName,
+        creatorPhoto: classData.creatorPhoto,
+        id: classId,
+        name: classData.name,
+      });
+      await (
+        await userRef.get()
+      ).docs[0].ref.update({
+        enrolledClassrooms: tempClassrooms,
+      });
       // alert done
+      alert(`Enrolled in ${classData.name} successfully!`);
+      handleClose();
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -58,7 +81,7 @@ function JoinClass() {
             Cancel
           </Button>
           <Button onClick={joinClass} color="primary">
-            Create
+            Join
           </Button>
         </DialogActions>
       </Dialog>
